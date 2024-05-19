@@ -52,6 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const searchMovies = async (query) => {
+        try {
+            const response = await fetch(`${API_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`);
+            const data = await response.json();
+            displayItems(data.results, 'search-results-list');
+        } catch (error) {
+            console.error('Error searching movies:', error);
+        }
+    };
+
     const displayTopPopularMovies = (movies) => {
         const slider = document.getElementById('slider');
         movies.slice(0, 3).forEach(movie => {
@@ -116,6 +126,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('menu-button').addEventListener('click', () => {
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenu.classList.toggle('hidden');
+    });
+
+    // Event listener for search functionality
+    document.getElementById('search-button').addEventListener('click', () => {
+        const query = document.getElementById('search-input').value;
+        if (query) {
+            searchMovies(query);
+        }
+    });
+
+    document.getElementById('search-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                searchMovies(query);
+            }
+        }
     });
 
     // Fetch and display content
